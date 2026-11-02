@@ -27,7 +27,7 @@ Viora is a modern messaging application built using Flutter and Supabase. It aim
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/viora.git
+git clone https://github.com/arooj-dev-cloud/viora.git
 ```
 
 ### 2. Open the Project
