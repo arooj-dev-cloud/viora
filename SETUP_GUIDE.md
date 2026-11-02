@@ -1,0 +1,15 @@
+# Setup guide
+
+1. Install Flutter 3.44 or later and Android Studio; accept Android SDK licenses with `flutter doctor --android-licenses`.
+2. Copy `.env.example` to `.env`. Set your Supabase project URL and publishable key; keep service-role keys out of the app. Set `VIORA_INVITE_URL` to a hosted test APK or future store listing. The example URL is only a placeholder.
+3. In Supabase **Authentication → Providers**, enable Email. Configure email confirmation and recovery email templates for your project.
+4. In **Authentication → URL Configuration → Redirect URLs**, allow `viora://auth-callback/**` for mobile password recovery. Configure any hosted web origin separately if you deploy the web build.
+5. Run every SQL migration in `supabase/migrations/` in filename order through `0022_chat_delete_and_profile_presence.sql` in the Supabase SQL Editor. If earlier migrations were already applied, run only the unapplied later files.
+6. Realtime migrations publish `messages`, `user_notifications`, `call_sessions`, `call_signals`, `message_reactions`, and `vibes_statuses`. Verify those tables in Supabase **Database → Publications → supabase_realtime** if events do not arrive.
+7. Run `flutter pub get`, `flutter analyze`, `flutter test`, then `flutter run`.
+8. To test messaging and calls, sign up with two separate email accounts on two Android devices, confirm the addresses if needed, sign in, discover each other by exact Viora email, and open a direct chat.
+9. Calls use Supabase Realtime for foreground invitations and WebRTC for media. Deploy `supabase/functions/turn-credentials` with `supabase functions deploy turn-credentials`. Set `TURN_URLS` to your TURN provider's comma-separated `turn:`/`turns:` URLs and `TURN_SECRET` to that provider's Coturn REST shared secret using `supabase secrets set`; optionally set `TURN_TTL_SECONDS`. Do not place the TURN secret in Flutter, `.env`, or a committed file. The function verifies the signed-in user and returns short-lived TURN credentials. Without the function/provider, the app falls back to public STUN; calls may fail on networks that require TURN.
+10. For a real verification, keep both apps open, start with both devices on separate networks (for example Wi-Fi and mobile data), accept the incoming call, confirm two-way audio, then test video, camera switching, mute, and hangup from each side. Foreground Realtime is supported; incoming calls while the app is backgrounded or terminated need a separate push-notification system and are not configured. No live two-device call has been verified from this workspace.
+11. Build an installable Android debug APK with `flutter build apk --debug`; the output is `build/app/outputs/flutter-apk/app-debug.apk`.
+
+Notifications use Supabase in-app records and Realtime while Viora is active; no Firebase or FCM is used. Voice/video use Supabase signaling and WebRTC. Group calls are not implemented. Real-device calls across restrictive networks require your TURN provider and the protected Edge Function setup above. Neither background push nor live two-device call media has been verified in this workspace.

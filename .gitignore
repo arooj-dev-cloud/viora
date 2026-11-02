@@ -1,0 +1,32 @@
+# Flutter and Dart
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Android
+android/local.properties
+android/key.properties
+android/*.jks
+android/*.keystore
+
+# Generated files
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Logs
+*.log
+
+# Local project archive
+viora-attach.zip
